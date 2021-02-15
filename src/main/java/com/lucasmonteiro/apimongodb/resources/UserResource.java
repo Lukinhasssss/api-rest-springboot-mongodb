@@ -1,6 +1,7 @@
 package com.lucasmonteiro.apimongodb.resources;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -9,6 +10,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.lucasmonteiro.apimongodb.domain.User;
+import com.lucasmonteiro.apimongodb.dto.UserDTO;
 import com.lucasmonteiro.apimongodb.services.UserService;
 
 @RestController
@@ -20,9 +22,10 @@ public class UserResource {
 	
 	// @RequestMapping(method = RequestMethod.GET) --> Também é possível fazer desta forma
 	@GetMapping
-	public ResponseEntity<List<User>> findAll() {
+	public ResponseEntity<List<UserDTO>> findAll() {
 		List<User> users = service.findAll();
-		return ResponseEntity.ok().body(users);
+		List<UserDTO> usersDTO = users.stream().map(user -> new UserDTO(user)).collect(Collectors.toList());
+		return ResponseEntity.ok().body(usersDTO);
 	}
 
 }
